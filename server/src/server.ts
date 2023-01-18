@@ -1,26 +1,16 @@
 import Fastify from "fastify";
 import cors from '@fastify/cors'
-import { PrismaClient } from '@prisma/client'
+import { appRoutes } from "./routes";
+
 
 // Executando o fastify
 const app = Fastify()
-// Executando o prismaClient
-const prisma = new PrismaClient()
+
 
 // Habilitando o Cross-Origin-Resource-Sharing
 app.register(cors)
 
-// Rota
-app.get('/', async () => {
-    const habits = await prisma.habit.findMany({
-        where: {
-            title: {
-                startsWith: 'Beber'
-            }
-        }
-    })
-    return habits
-})
+app.register(appRoutes)
 
 
 // Deixar o app "ouvindo" na porta 3333
