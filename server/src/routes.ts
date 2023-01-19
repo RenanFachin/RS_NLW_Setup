@@ -79,5 +79,65 @@ export async function appRoutes(app: FastifyInstance) {
             completedHabits
         }
     })
+
+
+    // Completar / não completar um hábito
+    app.patch('/habits/:id/toggle', async (request) => {
+        const toggleHabitParams = z.object({
+            id: z.string().uuid() // Validando que é um UUID com o ZOD
+        })
+
+        const { id } = toggleHabitParams.parse(request.params)
+
+        // Completando apenas o hábito do dia vigente(atual)
+        const today = dayjs().startOf('day').toDate()
+
+
+        // Procurando o dia onde a data seja igual a data de hoje
+        let day = await prisma.day.findUnique({
+            where: {
+                date: today,
+            }
+        })
+
+        // Caso não exista, iremos criar o dado 
+        if (!day) {
+            day = await prisma.day.create({
+                data: {
+                    date: today,
+                }
+            })
+        }
+
+        // Buscando o registro na tabeça dayHabit para verificar se o hábito já estava marcado como completo
+        const dayHabit = await prisma.dayHabit.findUnique({
+            where: {
+                day_id_habit_id: {
+                    day_id: day.id,
+                    habit_id: id,
+                }
+            }
+        })
+
+        if (dayHabit) {
+            // Remover a marcação de completo
+            await prisma.dayHabit.delete({
+                where: {
+                    id: dayHabit.id
+                }
+            })
+        } else {
+            // Caso ele não tenha marcado como completo, iremos marcar agora
+            await prisma.dayHabit.create({
+                data: {
+                    day_id: day.id,
+                    habit_id: id
+                }
+            })
+        }
+
+
+
+    })
 }
 
