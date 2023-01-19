@@ -8,10 +8,10 @@ const weekDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 const summaryDates = generateDatesFromYearBeginning()
 
 // Minimo de quadrado que queremos me tela
-const minimiumSummaryDatesSize = 18 * 7 
+const minimiumSummaryDatesSize = 18 * 7
 
 // Quantos quadrados faltam para completar este mínimo de 18 semanas
-const amountOfDaysToFill = minimiumSummaryDatesSize - summaryDates.length 
+const amountOfDaysToFill = minimiumSummaryDatesSize - summaryDates.length
 
 
 export function Table() {
@@ -37,9 +37,13 @@ export function Table() {
                 {
                     summaryDates.map(date => {
                         return (
-                            <HabitDay
-                                key={date.toString()} // o KEY precisa ser uma string
-                            />
+                            (
+                                <HabitDay
+                                    key={date.toString()} // o KEY precisa ser uma string
+                                    amount={5}
+                                    completed={Math.round(Math.random() * 5)}
+                                />
+                            )
                         )
                     })
                 }
