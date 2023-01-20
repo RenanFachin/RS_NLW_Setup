@@ -1,4 +1,4 @@
-import { TouchableOpacity, Dimensions } from "react-native";
+import { TouchableOpacity, TouchableOpacityProps,  Dimensions } from "react-native";
 
 // Quantidade de quadrados por linha
 const WEEK_DAYS = 7
@@ -14,12 +14,16 @@ const USER_SCREEN_WIDTH = Dimensions.get('screen').width
 export const DAY_SIZE = ((USER_SCREEN_WIDTH) / WEEK_DAYS) - (SCREEN_HORIZONTAL_PADDING + 5)
 
 
-export function HabitDay() {
+interface Props extends TouchableOpacityProps {}
+
+
+export function HabitDay({...rest}: Props) {
     return (
         <TouchableOpacity 
         activeOpacity={0.7}
         className="bg-zinc-900 rounded-lg border-2 m-1 border-zinc-800" 
         style={{width: DAY_SIZE, height: DAY_SIZE}}
+        {...rest}
         />
 
 
