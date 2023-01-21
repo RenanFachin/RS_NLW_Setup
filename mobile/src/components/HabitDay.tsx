@@ -2,6 +2,7 @@ import { TouchableOpacity, TouchableOpacityProps, Dimensions } from "react-nativ
 import { generateProgressPercentage } from "../utils/generate-progress-percentage";
 
 import clsx from "clsx";
+import dayjs from "dayjs";
 
 // Quantidade de quadrados por linha
 const WEEK_DAYS = 7
@@ -29,6 +30,9 @@ export function HabitDay({ amountOfHabits = 0, amountCompleted = 0, date, ...res
     // Fazendo o cálculo da % de hábitos concluídos me cada dia e aplicando estilos condicionais com base neste valor
     const amountAccomplishedPercentage = amountOfHabits > 0 ? generateProgressPercentage(amountOfHabits, amountCompleted) : 0
 
+    const today = dayjs().startOf('day').toDate()
+    const isCurrentDay = dayjs(date).isSame(today)
+
     return (
         <TouchableOpacity
             className={
@@ -40,7 +44,8 @@ export function HabitDay({ amountOfHabits = 0, amountCompleted = 0, date, ...res
                     ["bg-violet-800 border-violet-600"]: amountAccomplishedPercentage > 20 && amountAccomplishedPercentage < 40,
                     ["bg-violet-700 border-violet-500"]: amountAccomplishedPercentage > 40 && amountAccomplishedPercentage < 60,
                     ["bg-violet-600 border-violet-500"]: amountAccomplishedPercentage > 60 && amountAccomplishedPercentage < 80,
-                    ["bg-violet-500 border-violet-400"]: amountAccomplishedPercentage > 80
+                    ["bg-violet-500 border-violet-400"]: amountAccomplishedPercentage > 80, 
+                    ["border-slate-200 border-[3px]"]: isCurrentDay
                 })
             }
             style={{ width: DAY_SIZE, height: DAY_SIZE }}
