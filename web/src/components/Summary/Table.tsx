@@ -53,7 +53,7 @@ export function Table() {
             </div>
 
             <div className="grid grid-rows-7 grid-flow-col gap-3">
-                {
+                { summary.length > 0 &&
                     summaryDates.map(date => {
                         // Verificar se o dia que está sendo percorrido está dentro do summary da API
                         const dayInSummary = summary.find(day => {
@@ -67,7 +67,7 @@ export function Table() {
                                     key={date.toString()} // o KEY precisa ser uma string
                                     date={date}
                                     amount={dayInSummary?.amount}
-                                    completed={dayInSummary?.completed}
+                                    defaultCompleted={dayInSummary?.completed}
                                 />
                             )
                         )
