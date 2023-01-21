@@ -30,7 +30,7 @@ export function HabitDay({ amount = 0, defaultCompleted = 0, date }: HabitDayPro
     return (
         <Popover.Root>
             <Popover.Trigger className={
-                clsx('w-10 h-10 border-2 rounded-lg', {
+                clsx('w-10 h-10 border-2 rounded-lg transition-colors ringStyle', {
                     'bg-zinc-900 border-zinc-800': completedPercetage === 0,
                     'bg-violet-900 border-violet-700': completedPercetage > 0 && completedPercetage < 20,
                     'bg-violet-800 border-violet-600': completedPercetage >= 20 && completedPercetage < 40,
@@ -45,7 +45,7 @@ export function HabitDay({ amount = 0, defaultCompleted = 0, date }: HabitDayPro
             <Popover.Portal>
 
                 <Popover.Content
-                    className='min-w-[320px] p-6 rounded-2xl bg-zinc-900 flex flex-col'
+                    className='min-w-[320px] p-6 rounded-2xl bg-zinc-900 flex flex-col ringStyle'
                     sideOffset={5}
                 >
                     <span className='font-semibold text-zinc-400'>
