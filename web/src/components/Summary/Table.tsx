@@ -1,3 +1,6 @@
+import dayjs from "dayjs"
+import { useEffect, useState } from "react"
+import { api } from "../../lib/axios"
 import { generateDatesFromYearBeginning } from "../../utils/generate-dates-from-year-beginning"
 import { DaysColumn } from "./DaysColumn"
 import { HabitDay } from "./HabitDay"
@@ -13,8 +16,24 @@ const minimiumSummaryDatesSize = 18 * 7
 // Quantos quadrados faltam para completar este mínimo de 18 semanas
 const amountOfDaysToFill = minimiumSummaryDatesSize - summaryDates.length
 
+// Tipando o que vem da API
+type Summary = Array<{
+    id: string;
+    date: string;
+    amount: number;
+    completed: number
+}>
 
 export function Table() {
+    const [summary, setSummary] = useState<Summary>([])
+
+    // chamada HTTP para a summary
+    useEffect(() => {
+        api.get('summary').then(response => {
+            setSummary(response.data)
+        })
+    }, [])
+
     return (
         <div className="w-full flex">
             <div className="grid grid-rows-7 grid-flow-row gap-3">
@@ -36,12 +55,19 @@ export function Table() {
             <div className="grid grid-rows-7 grid-flow-col gap-3">
                 {
                     summaryDates.map(date => {
+                        // Verificar se o dia que está sendo percorrido está dentro do summary da API
+                        const dayInSummary = summary.find(day => {
+                            // Validando se as datas são iguais com a função isSame
+                            return dayjs(date).isSame(day.date, 'day')
+                        })
+
                         return (
                             (
                                 <HabitDay
                                     key={date.toString()} // o KEY precisa ser uma string
-                                    amount={5}
-                                    completed={Math.round(Math.random() * 5)}
+                                    date={date}
+                                    amount={dayInSummary?.amount}
+                                    completed={dayInSummary?.completed}
                                 />
                             )
                         )

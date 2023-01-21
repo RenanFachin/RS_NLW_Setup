@@ -19,11 +19,9 @@ export function NewHabitForm() {
 
     function handleCreateNewHabit(event: FormEvent) {
         event.preventDefault()
-
-        console.log(title, weekDays)
     }
 
-    function handleToggleWeekday(weekDay: number) {
+    function handleToggleWeekDay(weekDay: number) {
         if (weekDays.includes(weekDay)) {
             // se o weekDay, dado passado para a função, já estiver dentro do array do state weekdays: vamos remover ele do array
             // o filter edita o array e cria um novo
@@ -65,7 +63,7 @@ export function NewHabitForm() {
                                 key={weekday}
                                 className='flex items-center gap-3 group'
                                 onCheckedChange={() => {
-                                    handleToggleWeekday(index)
+                                    handleToggleWeekDay(index)
                                 }}
                             >
 
