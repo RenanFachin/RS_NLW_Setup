@@ -142,33 +142,28 @@ export async function appRoutes(app: FastifyInstance) {
 
     // Rota de resumo de dias
     app.get('/summary', async () => {
-        // [{ date: 17/01, amount: 5, completed: 1 },{},{}]
-        // amount = possíveis
-
-        // Neste caso, mesmo que utilizando o ORM, precisamos fazer uma query na mão (RAW)
         const summary = await prisma.$queryRaw`
-            SELECT 
-                D.id, 
-                D.date,
-                (
-                    SELECT 
-                        cast(count(*) as float)
-                    FROM day_habits DH
-                    WHERE DH.day_id = D.id 
-                ) as completed,
-                (
-                    SELECT
-                        cast(count(*) as float)
-                    FROM habit_week_days HWD
-                    JOIN habits H
-                        ON H.id = HWD.habit.id
-                    WHERE
-                        HWD.week_day = cast (strftime('%w', D.date/1000.0, 'unixepoch') as int)
-                        AND H.created_at <= D.date
-                ) as amount
-            FROM days D
+          SELECT 
+            D.id, 
+            D.date,
+            (
+              SELECT 
+                cast(count(*) as float)
+              FROM day_habits DH
+              WHERE DH.day_id = D.id
+            ) as completed,
+            (
+              SELECT
+                cast(count(*) as float)
+              FROM habit_week_days HDW
+              JOIN habits H
+                ON H.id = HDW.habit_id
+              WHERE
+                HDW.week_day = cast(strftime('%w', D.date/1000.0, 'unixepoch') as int)
+                AND H.created_at <= D.date
+            ) as amount
+          FROM days D
         `
-
 
         return summary
     })
