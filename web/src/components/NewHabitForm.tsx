@@ -2,6 +2,9 @@ import { FormEvent, useState } from 'react'
 import { Check } from "phosphor-react";
 import * as Checkbox from '@radix-ui/react-checkbox';
 
+import toast from 'react-hot-toast'
+import { api } from '../lib/axios';
+
 const availableWeekDays = [
     'Domingo',
     'Segunda-feira',
@@ -17,8 +20,24 @@ export function NewHabitForm() {
     const [title, setTitle] = useState('')
     const [weekDays, setWeekDays] = useState<number[]>([])
 
-    function handleCreateNewHabit(event: FormEvent) {
+    async function handleCreateNewHabit(event: FormEvent) {
         event.preventDefault()
+
+        if (!title || weekDays.length === 0) {
+            throw new Error(toast.error("Preencha os dados necessários para cadastrar um novo hábito."))
+        }
+
+
+        await api.post('habits', {
+            title,
+            weekDays
+        })
+
+        // Limpando os status. Para isso é necessário passar  os valores de value e checked
+        setTitle('')
+        setWeekDays([])
+
+        toast.success("Parabéns! Novo hábito adicionado com sucesso.")
     }
 
     function handleToggleWeekDay(weekDay: number) {
@@ -37,6 +56,7 @@ export function NewHabitForm() {
 
     return (
         <form className="w-full flex flex-col mt-6" onSubmit={handleCreateNewHabit}>
+
             <label htmlFor="title" className="font-semibold leading-tight">
                 Qual seu comprometimento?
             </label>
@@ -48,6 +68,7 @@ export function NewHabitForm() {
                 autoFocus
                 className="p-4 rounded-lg mt-3 bg-zinc-800 text-white placeholder:text-zinc-400"
                 onChange={e => setTitle(e.target.value)}
+                value={title}
             />
 
             <label htmlFor="" className="font-semibold leading-tight mt-4">
@@ -62,6 +83,7 @@ export function NewHabitForm() {
                             <Checkbox.Root
                                 key={weekday}
                                 className='flex items-center gap-3 group'
+                                checked={weekDays.includes(index)}
                                 onCheckedChange={() => {
                                     handleToggleWeekDay(index)
                                 }}
