@@ -168,4 +168,3 @@ export async function appRoutes(app: FastifyInstance) {
         return summary
     })
 }
-
