@@ -8,6 +8,7 @@ import { generateProgressPercentage } from "../utils/generate-progress-percentag
 import { BackButton } from "../components/BackButton";
 import { ProgressBar } from "../components/ProgressBar";
 import { Loading } from "../components/Loading";
+import { HabitsEmpty } from "../components/HabitsEmpty";
 
 import { useRoute } from '@react-navigation/native' // hook utilizado para obter os parâmetros da rota
 import { CheckBox } from "../components/CheckBox";
@@ -101,22 +102,24 @@ export function Habit() {
                     {dayAndMonth}
                 </Text>
 
-                <ProgressBar 
+                <ProgressBar
                     progress={habitsProgress}
                 />
 
                 <View className="mt-6">
                     {
-                        dayInfo?.possibleHabits &&
-                        dayInfo?.possibleHabits.map(habit => (
+                        dayInfo?.possibleHabits ?
+                            dayInfo?.possibleHabits.map(habit => (
 
-                            <CheckBox
-                                key={habit.id}
-                                title={habit.title}
-                                checked={completedHabits.includes(habit.id)}
-                                onPress={() => handleToggleHabit(habit.id)}
-                            />
-                        ))
+                                <CheckBox
+                                    key={habit.id}
+                                    title={habit.title}
+                                    checked={completedHabits.includes(habit.id)}
+                                    onPress={() => handleToggleHabit(habit.id)}
+                                />
+                            ))
+                            :
+                            <HabitsEmpty />
                     }
                 </View>
 
