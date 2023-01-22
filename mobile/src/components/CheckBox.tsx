@@ -2,6 +2,8 @@ import { Text, TouchableOpacity, TouchableOpacityProps, View } from "react-nativ
 import { Feather } from '@expo/vector-icons'
 import colors from "tailwindcss/colors";
 
+// Animações
+import Animated, { FlipInYRight, FadeOut } from "react-native-reanimated";
 
 interface Props extends TouchableOpacityProps {
     title: string;
@@ -9,27 +11,44 @@ interface Props extends TouchableOpacityProps {
 }
 
 export function CheckBox({ title, checked = false, ...rest }: Props) {
+
     return (
         <TouchableOpacity activeOpacity={0.7} className="flex-row mb-2 items-center" {...rest}>
             {
                 checked ?
-                    <View className="h-8 w-8 bg-green-500 rounded-lg items-center justify-center">
-                        <Feather
-                            name="check"
-                            size={20}
-                            color={colors.white}
-                        />
-                    </View>
+                    <>
+                        <Animated.View
+                            className="h-8 w-8 bg-green-500 rounded-lg items-center justify-center"
+                            entering={FlipInYRight}
+                            exiting={FadeOut}
+                        >
+                            <Feather
+                                name="check"
+                                size={20}
+                                color={colors.white}
+                            />
+                        </Animated.View>
+
+                        <Animated.Text
+                            className="text-gray-400 line-through text-base ml-3 font-semibold"
+                            entering={FlipInYRight}
+                            exiting={FadeOut}
+                        >
+                            {title}
+                        </Animated.Text>
+                    </>
 
                     :
 
-                    <View className="h-8 w-8 bg-zinc-900 rounded-lg" />
+                    <>
+                        <View className="h-8 w-8 bg-zinc-900 rounded-lg" />
+
+                        <Text className="text-white text-base ml-3 font-semibold">
+                            {title}
+                        </Text>
+                    </>
             }
 
-
-            <Text className="text-white text-base ml-3 font-semibold">
-                {title}
-            </Text>
 
         </TouchableOpacity>
     )
