@@ -12,6 +12,7 @@ import { HabitsEmpty } from "../components/HabitsEmpty";
 
 import { useRoute } from '@react-navigation/native' // hook utilizado para obter os parâmetros da rota
 import { CheckBox } from "../components/CheckBox";
+import clsx from "clsx";
 
 // Tipando o que será enviado por parâmetro
 interface ParamsProps {
@@ -44,6 +45,9 @@ export function Habit() {
 
     // Verifica se existe habitos, caso exista, iremos calcular a % de conclusão deles para depois aplicar na barra de progresso
     const habitsProgress = dayInfo?.possibleHabits.length ? generateProgressPercentage(dayInfo.possibleHabits.length, completedHabits.length) : 0
+
+    // Verificando se a data é antiga e desabilitando a sua alteração
+    const isDateInPast = parsedDate.endOf('day').isBefore(new Date())
 
     async function fetchHabits() {
         try {
@@ -106,7 +110,11 @@ export function Habit() {
                     progress={habitsProgress}
                 />
 
-                <View className="mt-6">
+                <View className={clsx(
+                    "mt-6", {
+                    ["opacity-40"]: isDateInPast
+                }
+                )}>
                     {
                         dayInfo?.possibleHabits ?
                             dayInfo?.possibleHabits.map(habit => (
@@ -115,6 +123,7 @@ export function Habit() {
                                     key={habit.id}
                                     title={habit.title}
                                     checked={completedHabits.includes(habit.id)}
+                                    disabled={isDateInPast}
                                     onPress={() => handleToggleHabit(habit.id)}
                                 />
                             ))
@@ -122,6 +131,14 @@ export function Habit() {
                             <HabitsEmpty />
                     }
                 </View>
+
+                {
+                    isDateInPast && (
+                        <Text className="text-red-400 mt-10 text-center border-2 border-red-400 p-3 rounded-lg">
+                            Você não pode editar um hábito de um dia no passado!
+                        </Text>
+                    )
+                }
 
             </ScrollView>
 
