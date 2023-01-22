@@ -12,13 +12,12 @@
 Aplicação mobile da aplicação que registra os hábitos.
 
 
-
 ## Instalação
 Faça o clone do repositório e acessar na pasta mobile
 
 ```bash
 git clone https://github.com/RenanFachin/RS_NLW_Setup
-cd server
+cd mobile
 ```
 
 Instalando as dependências
